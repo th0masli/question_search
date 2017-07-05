@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {% load static %}
+    
+    <link rel="icon" href="{% static 'img/logo.jpg' %}">
+
+    <title>Mobius</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{% static 'css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/cover.css' %}" rel="stylesheet">
+	
+	<style type="text/css">
+		.col-center-block {
+		    float: none;
+		    display: block;
+		    margin: 0 auto;
+		}	
+		.mastfoot {
+			width: 100%;
+		}
+		.text-left {
+			float: left;
+		}
+		.text-right {
+			float: right;
+		}
+		.row {
+			margin-top:10px;
+		}
+	</style>
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="{% static 'js/ie-emulation-modes-warning.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+    	$(document).ready(function() 
+   		 {
+   		    $('p.change-search').click(function(e) 
+   		    { 
+   		     var text_title = 'h1.text-title';
+   		     var image_title = 'h1.image-title';
+   		     var text_form = 'form.text-form';
+   		     var image_form = 'form.image-form';
+   		     if($(text_title).hasClass("hidden")) {
+   		    	 $(image_title).addClass("hidden");
+   		    	 $(image_form).addClass("hidden");
+   		    	 $(text_title).removeClass("hidden");
+   		    	 $(text_form).removeClass("hidden");
+   		     } else {
+   		    	$(image_title).removeClass("hidden");
+  		    	$(image_form).removeClass("hidden");
+  		    	$(text_title).addClass("hidden");
+  		    	$(text_form).addClass("hidden");
+   		     }
+   		    });
+   		 });
+    </script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+      
+      <div class="navbar navbar-inverse navbar-fixed-top">
+	 	<div class="container">
+	        <div class="navbar-header">
+	        {% if user.is_authenticated %}
+	            <a class="navbar-brand active" href="#">Mobius &middot; 搜索</a>
+	        	<ul class="nav navbar-nav">
+		            <li class="dropdown">
+		                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		                    {{user.username}} <b class="caret"></b>
+		                </a>
+		                {% if user.username == "yuyao" %}
+		                <ul class="dropdown-menu">
+		                    <li><a href="./tongji" target=“_blank”>网站统计</a></li>
+		                    <li><a href="/mobius/se/admin/" target=“_blank”>管理员</a></li>
+		                    <li><a href="/mobius/se/question/visualizer/logout">退出登录</a></li>
+		                </ul>
+		                {% else %}
+		                <ul class="dropdown-menu">
+		                    <li><a href="./tongji" target=“_blank”>网站统计</a></li>
+		                    <li><a href="/mobius/se/question/visualizer/logout">退出登录</a></li>
+		                </ul>
+		                {% endif %}
+		            </li>
+		        </ul>
+	        {% else %}
+	        	<a class="navbar-brand active" href="#">搜索可视化</a>
+	        	<ul class="nav navbar-nav">
+	        		<li><a href="./about" target=“_blank”>权限和关于</a></li>
+		        </ul>
+	        {% endif %}
+	        </div>
+	        {% if user.is_authenticated %}
+	        <center>
+				<div class="navbar-collapse collapse" id="navbar-main">
+
+	            </div>
+	        </center>
+	        {% else %}
+	        <center>
+				<div class="navbar-collapse collapse" id="navbar-main">
+	                <form class="navbar-form navbar-right" role="search" action="/mobius/se/question/visualizer/" method="POST">
+	                {% csrf_token %}
+	                    <div class="form-group">
+	                        <input type="hidden" name="limit" value="50" id="search_param">
+						    <input type="hidden" name="task" value="{{task_value}}" id="search_param">         
+					        <input type="username" class="form-control" name="user" required="true", placeholder="User">
+					        <input type="password" class="form-control" name="token" required="true", placeholder="Password">
+	                    </div>
+	                    <button type="submit" class="btn btn-success">登 录</button>
+	                </form>
+	            </div>
+	        </center>
+	        {% endif %}
+	    </div>
+	</div>
+        
+		<div class="container">
+			<img src = "{% static 'img/logo.jpg' %}"></img>
+            <div class="inner cover">
+          		<h1 class="cover-heading text-title">文本搜索</h1> 
+          		<h1 class="cover-heading image-title hidden">图片搜索</h1>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+			<form role="form" action="/get_results/" method="POST" class="text-form">
+			{% csrf_token %}
+			    <div class="row">   
+			        <div class="col-xs-7 col-center-block">
+					    <div class="input-group">
+			                <input type="hidden" name="limit" value="30" id="search_param">         
+			                <input type="text" class="form-control" name="keywords" required="true", placeholder="输入要搜索的题目...">
+			                <span class="input-group-btn">
+			                    <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+			                </span>
+			            </div>
+			        </div>
+				</div>
+			</form>
+		</div>
+
+			<div class="mastfoot">
+	            <div class="inner">
+	              <p><center><a style="color:#fff">搜索可视化系统 by @yao.yu</a> <br/> <p class="footertext" style="color:#fff">Copyright 2017</p></center></p>
+	            </div>
+	        </div>
+       
+        
+      </div>
+    </div>
+   	
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script>window.jQuery || document.write('<script src="{% static 'js/jquery.min.js' %}"><\/script>')</script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+  </body>
+</html>
