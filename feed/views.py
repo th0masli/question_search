@@ -47,7 +47,6 @@ def get_question(request, question_id):
     question_list=[]
     data['question_id']=question_id
     data['message']='ok'
-    print row_num
     if row_num != 0:
         question={}
         row=cursor.fetchone()
