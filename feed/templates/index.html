@@ -113,33 +113,11 @@
 		        </ul>
 	        {% endif %}
 	        </div>
-	        {% if user.is_authenticated %}
-	        <center>
-				<div class="navbar-collapse collapse" id="navbar-main">
-
-	            </div>
-	        </center>
-	        {% else %}
-	        <center>
-				<div class="navbar-collapse collapse" id="navbar-main">
-	                <form class="navbar-form navbar-right" role="search" action="/mobius/se/question/visualizer/" method="POST">
-	                {% csrf_token %}
-	                    <div class="form-group">
-	                        <input type="hidden" name="limit" value="50" id="search_param">
-						    <input type="hidden" name="task" value="{{task_value}}" id="search_param">         
-					        <input type="username" class="form-control" name="user" required="true", placeholder="User">
-					        <input type="password" class="form-control" name="token" required="true", placeholder="Password">
-	                    </div>
-	                    <button type="submit" class="btn btn-success">登 录</button>
-	                </form>
-	            </div>
-	        </center>
-	        {% endif %}
 	    </div>
 	</div>
         
 		<div class="container">
-			<img src = "{% static 'img/logo.jpg' %}"></img>
+			<img src = "{% static 'img/logo.jpg' %}">
             <div class="inner cover">
           		<h1 class="cover-heading text-title">文本搜索</h1> 
           		<h1 class="cover-heading image-title hidden">图片搜索</h1>

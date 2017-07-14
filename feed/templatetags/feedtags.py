@@ -9,7 +9,7 @@ def get_source(value):
     return value.get('_source','')
 
 def source_fid(value):
-    return value.get('_source','').get('fid')
+    return value.get('_id','')
 
 def source_uid(value):
     return value.get('_source','').get('uid')

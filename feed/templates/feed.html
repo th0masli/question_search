@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     {% load static %}
-    
+    {% load feedtags %}
     <link rel="icon" href="{% static 'img/logo.jpg' %}">
 
     <title>Mobius</title>
@@ -56,7 +56,7 @@
 	</script>
     <script>
 	    $(document).ready(function() {     
-	    	for (var i=1; i<=5; i++)
+	    	for (var i=1; i<=100; i++)
   		    {
   		    	var class_name = 'div.question-' + i.toString();
   		    	$(class_name).removeClass("hidden");
@@ -126,12 +126,12 @@
 	                <span class="icon-bar"></span>
 	                <span class="icon-bar"></span>
 	            </button>
-	            <a class="navbar-brand" href="/mobius/se/question/visualizer">Mobius &middot; 搜索</a>
+	            <a class="navbar-brand" href="/">Mobius &middot; 搜索</a>
 	        </div>
 			<center>
 				<div class="navbar-collapse collapse" id="navbar-main">
 	            	<ul class="nav navbar-nav">
-	            		<li><a href="../about" target=“_blank”>权限和关于</a></li>
+	            		<li><a href="#" target=“_blank”>权限和关于</a></li>
 	                    <li class="active"><a>{{task}}</a></li>
 	                    <li class="dropdown">
 		                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -151,6 +151,15 @@
 		                {% endif %}
 	                </ul>
 		        </ul>
+	                <form class="navbar-form navbar-right text-form" role="search" action="/get_results/" method="POST">
+	                {% csrf_token %}
+	                    <div class="form-group">
+	                        <input type="hidden" name="limit" value="30" id="search_param">
+						    <input type="hidden" name="task" value="{{task_value}}" id="search_param">
+					        <input type="text" class="form-control" name="keywords" required="true", placeholder={{keywords}}>
+	                    </div>
+	                    <button type="submit" class="btn btn-success">GO!</button>
+	                </form>
 	            </div>
 	        </center>
 	    </div>
@@ -162,7 +171,7 @@
     		<div class="panel panel-danger">
 				<div class="panel-heading">搜索图片</div>
 				<div class="panel-body">
-					<img src="{{file_path}}" class="img-responsive center-block"></img>
+					<img src="{{file_path}}" class="img-responsive center-block">
 				</div>
 			</div>
 			<div class="panel panel-info">
@@ -175,12 +184,12 @@
 			<div class="panel panel-danger">
 				<div class="panel-heading">搜索关键字</div>
 				<div class="panel-body">
-					{{question_id | safe}}
+					{{keywords | safe}}
 				</div>
 			</div>
 			{% endif %}
 		</div>
-		{% if not question_list %}
+		{% if not hits %}
 		<div>
     		<div class="panel panel-danger">
 				<div class="panel-body">
@@ -188,46 +197,46 @@
 				</div>
 			</div>
 		</div>
-		{% endif %}
-    	{% for question in question_list%}
+		{% else %}
+    	{% for hit in hits %}
     	<div class="question-{{forloop.counter}} hidden">
     		<div class="panel panel-danger">
-				<div class="panel-heading">{{forloop.counter}}. 题干   <span style="float:right">{{question.id}}</span></div>
+				<div class="panel-heading">{{forloop.counter}}. 拍搜识别结果
+                    <span style="float:right">time: {{ hit|source_time }} &nbsp;&nbsp;
+                        fid:{{hit|source_fid}}   &nbsp;&nbsp;uid:{{ hit|source_uid }}</span>
+                </div>
 				<div class="panel-body">
-					{{question.item_content | safe}}
+					{{hit|source_ocrResult}}
 				</div>
 			</div>
 			<div class="panel panel-info">
-				<div class="panel-heading">答案</div>
+				<div class="panel-heading">搜索结果</div>
 				<div class="panel-body">
-					{{question.answer | safe}}
+                    {% for rs in hit|source_searchResult %}
+					<span style="float:left"><a href="/get_question/{{ rs }}/">{{ rs }}</a>&nbsp;&nbsp;&nbsp;</span>
+                    {% endfor %}
 				</div>
 			</div>
-			{% if question.hint %}
-			<div class="panel panel-info">
-				<div class="panel-heading">解析</div>
-				<div class="panel-body">
-					{{question.hint | safe}}
-				</div>
-			</div>
-			{% endif %}
-			{% if question.remark %}
-			<div class="panel panel-info">
-				<div class="panel-heading">点评</div>
-				<div class="panel-body">
-					{{question.remark | safe}}
-				</div>
-			</div>
-			{% endif %}
+
 		</div>
 		{% endfor %}
+        {% endif %}
+		<nav>
+		  <ul class="pagination pagination-lg">
+		    {% for page in pages %}
+		    <li class="page-{{forloop.counter}}"><span>{{page}}</span></li>
+		    {% endfor %}
+		  </ul>
+		</nav>
 		
 	</div>
 
 	<div id="footer">
-        <div class="row">
-            <p><center><a style="color:#fff">搜索可视化系统 by @yao.yu</a> <br/> <p class="footertext" style="color:#fff">Copyright 2017</p></center></p>
-        </div>
+	    <div class="container">
+	        <div class="row">
+	            <p><center><a style="color:#fff">搜索可视化系统 by @yao.yu</a> <br/> <p class="footertext" style="color:#fff">Copyright 2017</p></center></p>
+	        </div>
+	    </div>
 	</div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
