@@ -11,12 +11,14 @@ import re
 
 
 # Create your views here.
-es=Elasticsearch("10.2.1.13:8001")
+es=Elasticsearch("106.75.36.191:8001")#10.2.1.13
 question_bank_conn=pymysql.connect(host='10.10.118.78',port=3306,
                                    user='rd',password='mTUzu4DnD4tjASGmohYhyPQn6TrYeveb',
-                                   db='question_bank_clean0605',charset='utf8')
+                                   db='question_bank_clean0605',charset='utf8')#线上环境
 
-
+# question_bank_conn=pymysql.connect(host='10.2.1.106',port=3306,
+#                                    user='wenba',password='4g5tg4e65ywt5u7h6b8iu798',
+#                                    db='question_bank_clean0816',charset='utf8')
 def home(request):
     return render(request,'index.html')
 
