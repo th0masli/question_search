@@ -11,7 +11,7 @@ import re
 
 
 # Create your views here.
-es=Elasticsearch("106.75.36.191:8001")#10.2.1.13
+es=Elasticsearch("elastic:changeme@106.75.36.191:8001", verify_certs=True)#10.2.1.13
 question_bank_conn=pymysql.connect(host='10.10.118.78',port=3306,
                                    user='rd',password='mTUzu4DnD4tjASGmohYhyPQn6TrYeveb',
                                    db='question_bank_clean0605',charset='utf8')#线上环境
